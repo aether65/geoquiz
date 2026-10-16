@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Language, Question, Topic, Difficulty } from '../types';
 import { t } from '../data/i18n';
+import { IconRobot } from './Icons';
 
 interface AIModeProps {
   apiKey: string;
@@ -211,7 +212,9 @@ Return JSON array with this exact structure:
   return (
     <div className="ai-loading-screen">
       <div className="glass-card ai-loading-card">
-        <div className="ai-loading-icon">🤖</div>
+        <div className="ai-loading-icon">
+          <IconRobot size={56} />
+        </div>
         <h2 className="ai-loading-title">{messages[messageIdx]}</h2>
         <p className="ai-loading-progress">
           {Math.round(progress)}% — {progress < 50 
@@ -225,7 +228,7 @@ Return JSON array with this exact structure:
           <div className="ai-progress-fill" style={{ width: `${progress}%` }} />
         </div>
         {status === 'error' && (
-          <p className="ai-error-msg">❌ {t('common.loading', lang)}... Erro na conexão com IA</p>
+          <p className="ai-error-msg">Erro na conexão com IA. Verifique sua chave e tente novamente.</p>
         )}
         <button className="btn-secondary" onClick={onCancel} style={{ marginTop: '16px' }}>
           {t('common.cancel', lang)}

@@ -2,6 +2,7 @@ import React from 'react';
 import { GameState, Language, Player } from '../types';
 import { t } from '../data/i18n';
 import Confetti from './Confetti';
+import { IconTrophy, IconRefresh, IconChart, IconSearch, IconSkip, IconHandshake, IconCheck } from './Icons';
 
 interface FinalScreenProps {
   gameState: GameState;
@@ -36,7 +37,10 @@ const FinalScreen: React.FC<FinalScreenProps> = ({ gameState, lang, onPlayAgain,
     <div className="final-screen">
       <Confetti active={!isSolo} colors={players.map(p => p.color)} />
       <div className="final-header">
-        <h1 className="final-title">🏆 {t('final.title', lang)}</h1>
+        <h1 className="final-title">
+          <IconTrophy size={32} className="trophy-icon" />
+          <span>{t('final.title', lang)}</span>
+        </h1>
       </div>
 
       {/* Winner section */}
@@ -51,7 +55,10 @@ const FinalScreen: React.FC<FinalScreenProps> = ({ gameState, lang, onPlayAgain,
           </div>
         ) : isTie ? (
           <div className="tie-result">
-            <h2 className="tie-text">🤝 {t('final.tie', lang)}</h2>
+            <h2 className="tie-text">
+              <IconHandshake size={28} className="inline-icon" />
+              <span>{t('final.tie', lang)}</span>
+            </h2>
             <div className="tie-players">
               {winners.map(w => (
                 <span key={w.id} className="tie-player" style={{ color: w.color }}>{w.name}</span>
@@ -61,7 +68,10 @@ const FinalScreen: React.FC<FinalScreenProps> = ({ gameState, lang, onPlayAgain,
           </div>
         ) : (
           <div className="winner-result">
-            <h2 className="winner-text">🎉 {t('final.winner', lang)}!</h2>
+            <h2 className="winner-text">
+              <IconTrophy size={28} className="inline-icon" />
+              <span>{t('final.winner', lang)}</span>
+            </h2>
             <div className="winner-name" style={{ color: winners[0].color }}>
               {winners[0].name}
             </div>
@@ -72,7 +82,10 @@ const FinalScreen: React.FC<FinalScreenProps> = ({ gameState, lang, onPlayAgain,
 
       {/* Scoreboard */}
       <div className="scoreboard glass-card">
-        <h3 className="scoreboard-title">{t('report.summary', lang)}</h3>
+        <h3 className="scoreboard-title">
+          <IconChart size={18} className="inline-icon" />
+          <span>{t('report.summary', lang)}</span>
+        </h3>
         <div className="scoreboard-table">
           <div className="sb-header">
             <span>{t('start.name', lang)}</span>
@@ -168,18 +181,21 @@ const FinalScreen: React.FC<FinalScreenProps> = ({ gameState, lang, onPlayAgain,
       {/* Actions */}
       <div className="final-actions">
         <button className="btn-primary" onClick={onPlayAgain}>
-          🔄 {t('final.playAgain', lang)}
+          <IconRefresh size={18} />
+          <span>{t('final.playAgain', lang)}</span>
         </button>
         <button className="btn-secondary" onClick={onReport}>
-          📊 {t('final.report', lang)}
+          <IconChart size={18} />
+          <span>{t('final.report', lang)}</span>
         </button>
         {hasErrors && (
           <button className="btn-secondary" onClick={onErrorAnalysis}>
-            🔍 {t('final.errorAnalysis', lang)}
+            <IconSearch size={18} />
+            <span>{t('final.errorAnalysis', lang)}</span>
           </button>
         )}
         {!hasErrors && (
-          <p className="no-errors-msg">✨ {t('final.noErrors', lang)}</p>
+          <p className="no-errors-msg"><span style={{display:'inline-flex',verticalAlign:'middle',marginRight:'6px'}}><IconCheck size={18} className="icon-correct" /></span>{t('final.noErrors', lang)}</p>
         )}
       </div>
     </div>

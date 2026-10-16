@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { GameState, Language } from '../types';
 import { t } from '../data/i18n';
 import { MathFigure } from './Figures';
+import { IconCheck, IconX, IconClock, IconArrowRight, IconLightbulb, IconBook } from './Icons';
 
 interface ExplanationScreenProps {
   gameState: GameState;
@@ -18,12 +19,12 @@ const ExplanationScreen: React.FC<ExplanationScreenProps> = ({ gameState, lang, 
 
   const letters = ['A', 'B', 'C', 'D', 'E'];
   const tabs = [
-    { key: 'mainIdea', label: t('explanation.mainIdea', lang) },
-    { key: 'formula', label: t('explanation.formula', lang) },
-    { key: 'steps', label: t('explanation.steps', lang) },
-    { key: 'verification', label: t('explanation.verification', lang) },
-    { key: 'wrongReasons', label: t('explanation.wrongReasons', lang) },
-    { key: 'tip', label: t('explanation.tip', lang) },
+    { key: 'mainIdea', label: t('explanation.mainIdea', lang), icon: <IconBook size={14} /> },
+    { key: 'formula', label: t('explanation.formula', lang), icon: <span style={{fontStyle:'italic',fontWeight:700}}>ƒ</span> },
+    { key: 'steps', label: t('explanation.steps', lang), icon: <span>1.</span> },
+    { key: 'verification', label: t('explanation.verification', lang), icon: <IconCheck size={14} /> },
+    { key: 'wrongReasons', label: t('explanation.wrongReasons', lang), icon: <IconX size={14} /> },
+    { key: 'tip', label: t('explanation.tip', lang), icon: <IconLightbulb size={14} /> },
   ];
 
   const isLastQuestion = currentQuestionIndex >= questions.length - 1;
@@ -32,7 +33,8 @@ const ExplanationScreen: React.FC<ExplanationScreenProps> = ({ gameState, lang, 
     <div className="explanation-screen">
       <div className="explanation-header">
         <h2 className="explanation-title">
-          📖 {t('explanation.title', lang)} — {t('game.question', lang)} {currentQuestionIndex + 1}
+          <IconBook size={22} />
+          <span>{t('explanation.title', lang)} — {t('game.question', lang)} {currentQuestionIndex + 1}</span>
         </h2>
       </div>
 
@@ -56,7 +58,11 @@ const ExplanationScreen: React.FC<ExplanationScreenProps> = ({ gameState, lang, 
           return (
             <div key={player.id} className="player-result" style={{ borderColor: player.color }}>
               <span className="result-name" style={{ color: player.color }}>{player.name}</span>
-              <span className="result-icon">{isCorrect ? '✅' : answer ? '❌' : '⏭️'}</span>
+              <span className="result-icon">
+                {isCorrect ? <IconCheck size={18} className="icon-correct" /> : 
+                 answer ? <IconX size={18} className="icon-wrong" /> : 
+                 <IconClock size={18} className="icon-timeout" />}
+              </span>
               <span className="result-answer">
                 {answer ? (
                   <>
@@ -69,7 +75,8 @@ const ExplanationScreen: React.FC<ExplanationScreenProps> = ({ gameState, lang, 
               </span>
               {answer && (
                 <span className="result-time">
-                  {t('explanation.timeSpent', lang)}: {answer.timeSpent.toFixed(1)}{t('common.seconds', lang)}
+                  <IconClock size={12} />
+                  {answer.timeSpent.toFixed(1)}{t('common.seconds', lang)}
                 </span>
               )}
             </div>
@@ -79,6 +86,7 @@ const ExplanationScreen: React.FC<ExplanationScreenProps> = ({ gameState, lang, 
 
       {/* Correct answer highlight */}
       <div className="correct-answer-box">
+        <IconCheck size={20} className="correct-icon" />
         <span className="correct-label">{t('explanation.correctAnswer', lang)}:</span>
         <span className="correct-value">
           {letters[question.correctIndex]} — {question.alternatives[question.correctIndex]}
@@ -93,7 +101,8 @@ const ExplanationScreen: React.FC<ExplanationScreenProps> = ({ gameState, lang, 
             className={`tab-btn ${activeTab === idx ? 'active' : ''}`}
             onClick={() => setActiveTab(idx)}
           >
-            {tab.label}
+            {tab.icon}
+            <span>{tab.label}</span>
           </button>
         ))}
       </div>
@@ -134,7 +143,10 @@ const ExplanationScreen: React.FC<ExplanationScreenProps> = ({ gameState, lang, 
         )}
         {activeTab === 5 && (
           <div className="exp-section">
-            <p className="tip-text">💡 {question.explanation.tip}</p>
+            <p className="tip-text">
+              <IconLightbulb size={16} className="tip-icon" />
+              {question.explanation.tip}
+            </p>
           </div>
         )}
       </div>
@@ -142,7 +154,8 @@ const ExplanationScreen: React.FC<ExplanationScreenProps> = ({ gameState, lang, 
       {/* Next button */}
       <div className="explanation-actions">
         <button className="btn-primary" onClick={onNext}>
-          {isLastQuestion ? '🏁 ' + t('final.title', lang) : '➡️ ' + t('explanation.next', lang)}
+          <span>{isLastQuestion ? t('final.title', lang) : t('explanation.next', lang)}</span>
+          <IconArrowRight size={18} />
         </button>
       </div>
     </div>

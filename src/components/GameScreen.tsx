@@ -2,6 +2,7 @@ import React, { useEffect, useCallback, useState } from 'react';
 import { GameState, Player, Language } from '../types';
 import { t } from '../data/i18n';
 import { MathFigure } from './Figures';
+import { IconSettings, IconLock } from './Icons';
 
 interface GameScreenProps {
   gameState: GameState;
@@ -68,18 +69,18 @@ const GameScreen: React.FC<GameScreenProps> = ({ gameState, lang, onAnswer, onPa
           <span className={`difficulty-badge diff-${question.difficulty}`}>
             {t(`game.difficulty.${question.difficulty}`, lang)}
           </span>
-          {question.isGenerated && <span className="ai-badge">{t('game.ai.badge', lang)}</span>}
+          {question.isGenerated && <span className="ai-badge">AI</span>}
         </div>
 
         {/* Timer */}
         <div className="timer-container">
           <svg viewBox="0 0 100 100" className="timer-svg">
-            <circle cx="50" cy="50" r="42" fill="none" stroke="var(--glass-border)" strokeWidth="4" />
+            <circle cx="50" cy="50" r="42" fill="none" stroke="var(--glass-border)" strokeWidth="3" />
             <circle
               cx="50" cy="50" r="42"
               fill="none"
               stroke={timerColor}
-              strokeWidth="4"
+              strokeWidth="3.5"
               strokeDasharray={`${2 * Math.PI * 42}`}
               strokeDashoffset={`${2 * Math.PI * 42 * (1 - timerPercent / 100)}`}
               strokeLinecap="round"
@@ -93,7 +94,9 @@ const GameScreen: React.FC<GameScreenProps> = ({ gameState, lang, onAnswer, onPa
           {isPaused && <div className="timer-paused">{t('game.paused', lang)}</div>}
         </div>
 
-        <button className="btn-icon" onClick={onPause} title={t('start.settings', lang)}>⚙️</button>
+        <button className="btn-icon" onClick={onPause} title={t('start.settings', lang)}>
+          <IconSettings size={18} />
+        </button>
       </div>
 
       {/* Score bar */}
@@ -101,8 +104,12 @@ const GameScreen: React.FC<GameScreenProps> = ({ gameState, lang, onAnswer, onPa
         {players.map(player => (
           <div key={player.id} className={`score-pill ${player.blocked ? 'blocked' : ''}`} style={{ borderColor: player.color }}>
             <span className="score-name" style={{ color: player.color }}>{player.name}</span>
-            <span className="score-value">{player.score} {t('game.score', lang)}</span>
-            {player.blocked && <span className="blocked-badge">{t('game.blocked', lang)}</span>}
+            <span className="score-value">{player.score}</span>
+            {player.blocked && (
+              <span className="blocked-badge" title={t('game.blocked', lang)}>
+                <IconLock size={12} />
+              </span>
+            )}
           </div>
         ))}
       </div>
@@ -130,7 +137,7 @@ const GameScreen: React.FC<GameScreenProps> = ({ gameState, lang, onAnswer, onPa
                   <span
                     key={player.id}
                     className={`alt-key ${player.blocked ? 'disabled' : ''}`}
-                    style={{ background: player.color + '30', color: player.color, borderColor: player.color }}
+                    style={{ background: player.color + '20', color: player.color, borderColor: player.color + '40' }}
                     title={`${player.name}: ${player.keys[idx]}`}
                   >
                     {player.keys[idx].toUpperCase()}

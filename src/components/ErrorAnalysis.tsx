@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { GameState, Language, Player } from '../types';
 import { t } from '../data/i18n';
 import { MathFigure } from './Figures';
+import { IconClose, IconArrowLeft, IconArrowRight, IconSearch, IconBrain, IconTarget, IconCheck, IconClock, IconX, IconRobot, IconBook } from './Icons';
 
 interface ErrorAnalysisProps {
   gameState: GameState;
@@ -45,9 +46,10 @@ const ErrorAnalysis: React.FC<ErrorAnalysisProps> = ({ gameState, lang, onClose 
     return (
       <div className="error-analysis-screen">
         <div className="glass-card" style={{ textAlign: 'center', padding: '40px' }}>
-          <h2>✨ {t('final.noErrors', lang)}</h2>
+          <h2><span style={{display:'inline-flex',verticalAlign:'middle',marginRight:'8px'}}><IconCheck size={28} className="icon-correct" /></span>{t('final.noErrors', lang)}</h2>
           <button className="btn-primary" onClick={onClose} style={{ marginTop: '20px' }}>
-            {t('common.back', lang)}
+            <IconArrowLeft size={18} />
+            <span>{t('common.back', lang)}</span>
           </button>
         </div>
       </div>
@@ -67,8 +69,13 @@ const ErrorAnalysis: React.FC<ErrorAnalysisProps> = ({ gameState, lang, onClose 
   return (
     <div className="error-analysis-screen">
       <div className="ea-header">
-        <h2>🔍 {t('errorAnalysis.title', lang)}</h2>
-        <button className="btn-icon" onClick={onClose}>✕</button>
+        <h2>
+          <IconSearch size={24} />
+          <span>{t('errorAnalysis.title', lang)}</span>
+        </h2>
+        <button className="btn-icon" onClick={onClose}>
+          <IconClose size={18} />
+        </button>
       </div>
 
       {/* Player selector */}
@@ -130,13 +137,13 @@ const ErrorAnalysis: React.FC<ErrorAnalysisProps> = ({ gameState, lang, onClose 
                 </p>
                 <p>
                   <span className="ea-label">{t('explanation.timeSpent', lang)}:</span>
-                  <span>{currentError.timeSpent.toFixed(1)}{t('common.seconds', lang)}</span>
+                  <span><IconClock size={12} /> {currentError.timeSpent.toFixed(1)}{t('common.seconds', lang)}</span>
                 </p>
               </div>
 
               {/* Diagnosis */}
               <div className="ea-diagnosis">
-                <h4>{t('errorAnalysis.diagnosis', lang)}</h4>
+                <h4><IconBrain size={16} /> {t('errorAnalysis.diagnosis', lang)}</h4>
                 <div className="ea-diagnosis-options">
                   {diagnosisOptions.map(opt => (
                     <button
@@ -152,13 +159,13 @@ const ErrorAnalysis: React.FC<ErrorAnalysisProps> = ({ gameState, lang, onClose 
 
               {/* Detected cause */}
               <div className="ea-cause">
-                <h4>{t('errorAnalysis.cause', lang)}</h4>
-                <p className="ea-cause-text">🤖 {detectCause(currentError)}</p>
+                <h4><IconTarget size={16} /> {t('errorAnalysis.cause', lang)}</h4>
+                <p className="ea-cause-text"><span style={{display:'inline-flex',verticalAlign:'middle',marginRight:'6px'}}><IconRobot size={14} /></span>{detectCause(currentError)}</p>
               </div>
 
               {/* Correction */}
               <div className="ea-correction">
-                <h4>{t('errorAnalysis.correction', lang)}</h4>
+                <h4><IconCheck size={16} /> {t('errorAnalysis.correction', lang)}</h4>
                 <ol>
                   {question.explanation.steps.map((step, idx) => (
                     <li key={idx}>{step}</li>
@@ -170,16 +177,19 @@ const ErrorAnalysis: React.FC<ErrorAnalysisProps> = ({ gameState, lang, onClose 
               <div className="ea-actions">
                 {currentErrorIdx > 0 && (
                   <button className="btn-secondary" onClick={() => setCurrentErrorIdx(prev => prev - 1)}>
-                    ← {t('common.back', lang)}
+                    <IconArrowLeft size={16} />
+                    <span>{t('common.back', lang)}</span>
                   </button>
                 )}
                 {currentErrorIdx < errors.length - 1 ? (
                   <button className="btn-primary" onClick={() => setCurrentErrorIdx(prev => prev + 1)}>
-                    {t('explanation.next', lang)} →
+                    <span>{t('explanation.next', lang)}</span>
+                    <IconArrowRight size={16} />
                   </button>
                 ) : allDiagnosed ? (
                   <button className="btn-primary" onClick={() => setShowConclusion(true)}>
-                    📋 {t('errorAnalysis.conclusion', lang)}
+                    <IconTarget size={16} />
+                    <span>{t('errorAnalysis.conclusion', lang)}</span>
                   </button>
                 ) : null}
               </div>
@@ -189,7 +199,10 @@ const ErrorAnalysis: React.FC<ErrorAnalysisProps> = ({ gameState, lang, onClose 
       ) : (
         /* Conclusion */
         <div className="ea-conclusion glass-card">
-          <h3>📋 {t('errorAnalysis.conclusion', lang)} — {player.name}</h3>
+          <h3>
+            <IconTarget size={20} />
+            <span>{t('errorAnalysis.conclusion', lang)} — {player.name}</span>
+          </h3>
           
           <div className="ea-conclusion-stats">
             <div className="ea-stat">
@@ -221,7 +234,7 @@ const ErrorAnalysis: React.FC<ErrorAnalysisProps> = ({ gameState, lang, onClose 
 
           {/* Study plan */}
           <div className="ea-study-plan">
-            <h4>📚 {t('errorAnalysis.studyPlan', lang)}</h4>
+            <h4><IconBook size={16} /> {t('errorAnalysis.studyPlan', lang)}</h4>
             <ol>
               {errors.some(e => e.topic === 'tales') && (
                 <li>Revisar o Teorema de Tales: proporções entre segmentos de retas paralelas cortadas por transversais.</li>
@@ -241,7 +254,8 @@ const ErrorAnalysis: React.FC<ErrorAnalysisProps> = ({ gameState, lang, onClose 
 
           <div className="ea-final-actions">
             <button className="btn-primary" onClick={onClose}>
-              {t('common.close', lang)}
+              <IconCheck size={18} />
+              <span>{t('common.close', lang)}</span>
             </button>
           </div>
         </div>

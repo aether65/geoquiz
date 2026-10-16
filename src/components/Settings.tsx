@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Settings as SettingsType, Language, ThemeMode, FontFamily } from '../types';
 import { t, getLanguageName } from '../data/i18n';
+import { IconClose, IconGlobe, IconPalette, IconType, IconSparkles, IconRobot, IconSun, IconMoon, IconAuto, IconKey, IconTrash, IconRefresh } from './Icons';
 
 interface SettingsProps {
   settings: SettingsType;
@@ -10,12 +11,12 @@ interface SettingsProps {
 }
 
 const PALETTES = [
-  { id: 'ocean', name: '🌊 Oceano', color: '#0ea5e9' },
-  { id: 'forest', name: '🌲 Floresta', color: '#10b981' },
-  { id: 'sunset', name: '🌅 Pôr do sol', color: '#f97316' },
-  { id: 'violet', name: '💜 Violeta', color: '#8b5cf6' },
-  { id: 'graphite', name: '⬛ Grafite', color: '#6b7280' },
-  { id: 'rose', name: '🌹 Rosa', color: '#ec4899' },
+  { id: 'ocean', name: 'Oceano', color: '#0ea5e9' },
+  { id: 'forest', name: 'Floresta', color: '#10b981' },
+  { id: 'sunset', name: 'Pôr do sol', color: '#f97316' },
+  { id: 'violet', name: 'Violeta', color: '#8b5cf6' },
+  { id: 'graphite', name: 'Grafite', color: '#6b7280' },
+  { id: 'rose', name: 'Rosa', color: '#ec4899' },
 ];
 
 const FONTS: { id: FontFamily; name: string }[] = [
@@ -23,7 +24,7 @@ const FONTS: { id: FontFamily; name: string }[] = [
   { id: 'serif', name: 'Serifada' },
   { id: 'mono', name: 'Monoespaçada' },
   { id: 'rounded', name: 'Arredondada' },
-  { id: 'readable', name: 'Alta legibilidade' },
+  { id: 'readable', name: 'Legibilidade' },
 ];
 
 const LANGUAGES: Language[] = ['pt', 'en', 'es', 'fr', 'it', 'ru', 'zh', 'ja'];
@@ -33,20 +34,20 @@ const Settings: React.FC<SettingsProps> = ({ settings, onUpdate, onClose, lang }
   const [aiTestResult, setAiTestResult] = useState<string | null>(null);
 
   const sections = [
-    { id: 'language', label: t('settings.language', lang), icon: '🌐' },
-    { id: 'appearance', label: t('settings.appearance', lang), icon: '🎨' },
-    { id: 'text', label: t('settings.text', lang), icon: '🔤' },
-    { id: 'animations', label: t('settings.animations', lang), icon: '✨' },
-    { id: 'ai', label: t('settings.ai', lang), icon: '🤖' },
+    { id: 'language', label: t('settings.language', lang), icon: <IconGlobe size={16} /> },
+    { id: 'appearance', label: t('settings.appearance', lang), icon: <IconPalette size={16} /> },
+    { id: 'text', label: t('settings.text', lang), icon: <IconType size={16} /> },
+    { id: 'animations', label: t('settings.animations', lang), icon: <IconSparkles size={16} /> },
+    { id: 'ai', label: t('settings.ai', lang), icon: <IconRobot size={16} /> },
   ];
 
   const testAIConnection = async () => {
     if (!settings.aiApiKey) {
-      setAiTestResult('❌ Chave não configurada');
+      setAiTestResult('Chave não configurada');
       return;
     }
     try {
-      setAiTestResult('⏳ Testando...');
+      setAiTestResult('Testando...');
       const response = await fetch(
         `https://generativelanguage.googleapis.com/v1beta/models/${settings.aiModel}:generateContent?key=${settings.aiApiKey}`,
         {
@@ -58,13 +59,13 @@ const Settings: React.FC<SettingsProps> = ({ settings, onUpdate, onClose, lang }
         }
       );
       if (response.ok) {
-        setAiTestResult('✅ Conexão OK!');
+        setAiTestResult('Conexão OK!');
       } else {
         const err = await response.json();
-        setAiTestResult(`❌ Erro: ${err.error?.message || 'Chave inválida'}`);
+        setAiTestResult(`Erro: ${err.error?.message || 'Chave inválida'}`);
       }
     } catch (e) {
-      setAiTestResult('❌ Sem conexão com a internet');
+      setAiTestResult('Sem conexão com a internet');
     }
   };
 
@@ -72,8 +73,13 @@ const Settings: React.FC<SettingsProps> = ({ settings, onUpdate, onClose, lang }
     <div className="settings-overlay" onClick={onClose}>
       <div className="settings-panel glass-card" onClick={e => e.stopPropagation()}>
         <div className="settings-header">
-          <h2>⚙️ {t('settings.title', lang)}</h2>
-          <button className="btn-icon" onClick={onClose}>✕</button>
+          <h2>
+            <IconSparkles size={20} />
+            <span>{t('settings.title', lang)}</span>
+          </h2>
+          <button className="btn-icon" onClick={onClose}>
+            <IconClose size={18} />
+          </button>
         </div>
 
         <div className="settings-body">
@@ -85,7 +91,7 @@ const Settings: React.FC<SettingsProps> = ({ settings, onUpdate, onClose, lang }
                 className={`settings-nav-btn ${activeSection === section.id ? 'active' : ''}`}
                 onClick={() => setActiveSection(section.id)}
               >
-                <span>{section.icon}</span>
+                {section.icon}
                 <span>{section.label}</span>
               </button>
             ))}
@@ -95,7 +101,7 @@ const Settings: React.FC<SettingsProps> = ({ settings, onUpdate, onClose, lang }
           <div className="settings-content">
             {activeSection === 'language' && (
               <div className="settings-section">
-                <h3>{t('settings.language', lang)}</h3>
+                <h3><IconGlobe size={16} /> {t('settings.language', lang)}</h3>
                 <div className="language-grid">
                   {LANGUAGES.map(l => (
                     <button
@@ -114,14 +120,18 @@ const Settings: React.FC<SettingsProps> = ({ settings, onUpdate, onClose, lang }
               <div className="settings-section">
                 <h3>{t('settings.theme', lang)}</h3>
                 <div className="theme-selector">
-                  {(['auto', 'light', 'dark'] as ThemeMode[]).map(theme => (
+                  {([
+                    { mode: 'auto' as ThemeMode, icon: <IconAuto size={16} />, label: t('settings.theme.auto', lang) },
+                    { mode: 'light' as ThemeMode, icon: <IconSun size={16} />, label: t('settings.theme.light', lang) },
+                    { mode: 'dark' as ThemeMode, icon: <IconMoon size={16} />, label: t('settings.theme.dark', lang) },
+                  ]).map(({ mode, icon, label }) => (
                     <button
-                      key={theme}
-                      className={`theme-btn ${settings.theme === theme ? 'active' : ''}`}
-                      onClick={() => onUpdate({ theme })}
+                      key={mode}
+                      className={`theme-btn ${settings.theme === mode ? 'active' : ''}`}
+                      onClick={() => onUpdate({ theme: mode })}
                     >
-                      {theme === 'auto' ? '🔄' : theme === 'light' ? '☀️' : '🌙'}
-                      {t(`settings.theme.${theme}`, lang)}
+                      {icon}
+                      <span>{label}</span>
                     </button>
                   ))}
                 </div>
@@ -161,7 +171,7 @@ const Settings: React.FC<SettingsProps> = ({ settings, onUpdate, onClose, lang }
 
             {activeSection === 'text' && (
               <div className="settings-section">
-                <h3>{t('settings.font', lang)}</h3>
+                <h3><IconType size={16} /> {t('settings.font', lang)}</h3>
                 <div className="font-grid">
                   {FONTS.map(f => (
                     <button
@@ -188,7 +198,7 @@ const Settings: React.FC<SettingsProps> = ({ settings, onUpdate, onClose, lang }
 
             {activeSection === 'animations' && (
               <div className="settings-section">
-                <h3>{t('settings.animations', lang)}</h3>
+                <h3><IconSparkles size={16} /> {t('settings.animations', lang)}</h3>
                 <button
                   className={`toggle-btn ${settings.animationsEnabled ? 'active' : ''}`}
                   onClick={() => onUpdate({ animationsEnabled: !settings.animationsEnabled })}
@@ -200,7 +210,7 @@ const Settings: React.FC<SettingsProps> = ({ settings, onUpdate, onClose, lang }
 
             {activeSection === 'ai' && (
               <div className="settings-section">
-                <h3>{t('settings.ai', lang)}</h3>
+                <h3><IconRobot size={16} /> {t('settings.ai', lang)}</h3>
                 <button
                   className={`toggle-btn ${settings.aiEnabled ? 'active' : ''}`}
                   onClick={() => onUpdate({ aiEnabled: !settings.aiEnabled })}
@@ -210,7 +220,7 @@ const Settings: React.FC<SettingsProps> = ({ settings, onUpdate, onClose, lang }
 
                 {settings.aiEnabled && (
                   <>
-                    <h3>{t('settings.aiKey', lang)}</h3>
+                    <h3><IconKey size={16} /> {t('settings.aiKey', lang)}</h3>
                     <input
                       type="password"
                       className="settings-input"
@@ -236,7 +246,8 @@ const Settings: React.FC<SettingsProps> = ({ settings, onUpdate, onClose, lang }
                         className="btn-secondary btn-danger"
                         onClick={() => onUpdate({ aiApiKey: '' })}
                       >
-                        {t('settings.aiClear', lang)}
+                        <IconTrash size={16} />
+                        <span>{t('settings.aiClear', lang)}</span>
                       </button>
                     </div>
                     {aiTestResult && <p className="ai-test-result">{aiTestResult}</p>}
@@ -263,7 +274,8 @@ const Settings: React.FC<SettingsProps> = ({ settings, onUpdate, onClose, lang }
               aiModel: 'gemini-2.0-flash',
             });
           }}>
-            {t('settings.reset', lang)}
+            <IconRefresh size={16} />
+            <span>{t('settings.reset', lang)}</span>
           </button>
           <button className="btn-primary" onClick={onClose}>
             {t('settings.close', lang)}

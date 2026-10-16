@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Language, PLAYER_COLORS, KEY_LABELS } from '../types';
 import { t } from '../data/i18n';
+import { IconPlay, IconSettings, IconUsers, IconBook, IconRobot } from './Icons';
 
 interface StartScreenProps {
   lang: Language;
@@ -28,10 +29,17 @@ const StartScreen: React.FC<StartScreenProps> = ({ lang, aiEnabled, onStart, onS
               <stop offset="0%" stopColor="var(--accent)" />
               <stop offset="100%" stopColor="var(--accent-secondary)" />
             </linearGradient>
+            <filter id="logoGlow">
+              <feGaussianBlur stdDeviation="2" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
           </defs>
-          <polygon points="20,80 60,20 100,80" fill="none" stroke="url(#logoGrad)" strokeWidth="3" />
-          <polyline points="55,80 55,55 75,55" fill="none" stroke="url(#logoGrad)" strokeWidth="2" />
-          <path d="M 70 30 Q 90 10 110 30" fill="none" stroke="url(#logoGrad)" strokeWidth="2" strokeDasharray="4,2" />
+          <polygon points="20,80 60,20 100,80" fill="none" stroke="url(#logoGrad)" strokeWidth="2.5" filter="url(#logoGlow)" />
+          <polyline points="55,80 55,55 75,55" fill="none" stroke="url(#logoGrad)" strokeWidth="1.8" />
+          <path d="M 70 30 Q 90 10 110 30" fill="none" stroke="url(#logoGrad)" strokeWidth="1.8" strokeDasharray="4,2" />
         </svg>
         <h1 className="logo-title">
           <span className="gradient-text">GeoQuiz</span>
@@ -43,7 +51,10 @@ const StartScreen: React.FC<StartScreenProps> = ({ lang, aiEnabled, onStart, onS
       <div className="glass-card start-card">
         {/* Player count */}
         <div className="form-section">
-          <label className="form-label">{t('start.playerCount', lang)}</label>
+          <label className="form-label">
+            <IconUsers size={16} />
+            <span>{t('start.playerCount', lang)}</span>
+          </label>
           <div className="player-selector">
             {[1, 2, 3, 4].map(n => (
               <button
@@ -74,7 +85,7 @@ const StartScreen: React.FC<StartScreenProps> = ({ lang, aiEnabled, onStart, onS
                 }}
                 placeholder={`${t('start.name', lang)} ${i + 1}`}
               />
-              <span className="player-keys">{t('start.keys', lang)}: {KEY_LABELS[i]}</span>
+              <span className="player-keys">{KEY_LABELS[i]}</span>
             </div>
           ))}
         </div>
@@ -87,14 +98,16 @@ const StartScreen: React.FC<StartScreenProps> = ({ lang, aiEnabled, onStart, onS
               className={`mode-btn ${gameMode === 'classic' ? 'active' : ''}`}
               onClick={() => setGameMode('classic')}
             >
-              📚 {t('start.classic', lang)}
+              <IconBook size={18} />
+              <span>{t('start.classic', lang)}</span>
             </button>
             {aiEnabled && (
               <button
                 className={`mode-btn ${gameMode === 'ai' ? 'active' : ''}`}
                 onClick={() => setGameMode('ai')}
               >
-                🤖 {t('start.ai', lang)}
+                <IconRobot size={18} />
+                <span>{t('start.ai', lang)}</span>
               </button>
             )}
           </div>
@@ -103,15 +116,15 @@ const StartScreen: React.FC<StartScreenProps> = ({ lang, aiEnabled, onStart, onS
         {/* Summary */}
         <div className="game-summary">
           <div className="summary-item">
-            <span className="summary-label">{t('start.totalQuestions', lang)}:</span>
+            <span className="summary-label">{t('start.totalQuestions', lang)}</span>
             <span className="summary-value">{totalQuestions}</span>
           </div>
           <div className="summary-item">
-            <span className="summary-label">{t('game.topic.tales', lang)}:</span>
+            <span className="summary-label">{t('game.topic.tales', lang)}</span>
             <span className="summary-value">{talesCount}</span>
           </div>
           <div className="summary-item">
-            <span className="summary-label">{t('game.topic.metrics', lang)}:</span>
+            <span className="summary-label">{t('game.topic.metrics', lang)}</span>
             <span className="summary-value">{metricsCount}</span>
           </div>
         </div>
@@ -119,10 +132,11 @@ const StartScreen: React.FC<StartScreenProps> = ({ lang, aiEnabled, onStart, onS
         {/* Actions */}
         <div className="start-actions">
           <button className="btn-primary" onClick={() => onStart(numPlayers, names, gameMode)}>
-            🎮 {t('start.start', lang)}
+            <IconPlay size={20} />
+            <span>{t('start.start', lang)}</span>
           </button>
-          <button className="btn-secondary" onClick={onSettings}>
-            ⚙️ {t('start.settings', lang)}
+          <button className="btn-secondary btn-icon-only" onClick={onSettings}>
+            <IconSettings size={20} />
           </button>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import React, { useRef, useCallback } from 'react';
 import { GameState, Language } from '../types';
 import { t } from '../data/i18n';
+import { IconClose, IconFile, IconPrinter, IconImage, IconArrowLeft } from './Icons';
 
 interface ReportProps {
   gameState: GameState;
@@ -36,7 +37,7 @@ const Report: React.FC<ReportProps> = ({ gameState, lang, onClose }) => {
 </style>
 </head>
 <body>
-<h1>🎮 ${t('report.title', lang)}</h1>
+<h1>${t('report.title', lang)}</h1>
 <div class="summary-box">
   <p><strong>${t('report.date', lang)}:</strong> ${date}</p>
   <p><strong>${t('report.players', lang)}:</strong> ${players.map(p => p.name).join(', ')}</p>
@@ -124,12 +125,10 @@ ${players.map(p => {
 
     const width = 1080;
     const padding = 60;
-    const lineHeight = 40;
     
     // Calculate height
     const playerRows = players.length;
-    const questionRows = Math.min(questions.length, 10);
-    const height = 400 + playerRows * 80 + questionRows * 50;
+    const height = 400 + playerRows * 80;
     
     canvas.width = width * 2;
     canvas.height = height * 2;
@@ -145,7 +144,7 @@ ${players.map(p => {
     // Title
     ctx.fillStyle = '#ffffff';
     ctx.font = 'bold 36px system-ui';
-    ctx.fillText('🎮 GeoQuiz - ' + t('report.title', lang), padding, 60);
+    ctx.fillText('GeoQuiz - ' + t('report.title', lang), padding, 60);
     
     ctx.font = '18px system-ui';
     ctx.fillStyle = '#94a3b8';
@@ -214,19 +213,27 @@ ${players.map(p => {
   return (
     <div className="report-screen">
       <div className="report-header">
-        <h2>📊 {t('report.title', lang)}</h2>
-        <button className="btn-icon" onClick={onClose}>✕</button>
+        <h2>
+          <IconFile size={24} />
+          <span>{t('report.title', lang)}</span>
+        </h2>
+        <button className="btn-icon" onClick={onClose}>
+          <IconClose size={18} />
+        </button>
       </div>
 
       <div className="report-actions">
         <button className="btn-primary" onClick={generateHTML}>
-          📄 {t('report.saveHtml', lang)}
+          <IconFile size={18} />
+          <span>{t('report.saveHtml', lang)}</span>
         </button>
         <button className="btn-secondary" onClick={generatePDF}>
-          🖨️ {t('report.savePdf', lang)}
+          <IconPrinter size={18} />
+          <span>{t('report.savePdf', lang)}</span>
         </button>
         <button className="btn-secondary" onClick={generatePNG}>
-          🖼️ {t('report.savePng', lang)}
+          <IconImage size={18} />
+          <span>{t('report.savePng', lang)}</span>
         </button>
       </div>
 
@@ -266,7 +273,8 @@ ${players.map(p => {
 
       <div className="report-footer">
         <button className="btn-secondary" onClick={onClose}>
-          {t('common.back', lang)}
+          <IconArrowLeft size={18} />
+          <span>{t('common.back', lang)}</span>
         </button>
       </div>
     </div>
